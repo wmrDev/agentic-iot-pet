@@ -16,6 +16,7 @@ Los pasos que escriben en la placa (respaldo aparte), la cablean o borran la NVS
 | Compilación en CI | Ejecución [46034564664](https://github.com/wmrDev/agentic-iot-pet/actions/runs/46034564664), resultado correcto. Compiló los tres proyectos de firmware (`firmware`, `firmware/test`, `firmware/diagnostics/h01`) en `espressif/idf:v5.5.6`, además del job `gradle` |
 | Qué no prueba la CI | Nada en placa. Compila H01 con los valores por defecto (todos los GPIO en `-1`) |
 | Compilaciones locales previas | `b951b8f` y `b503c73` (Windows), `17fb5c6` (H01). Ninguna es `1623ada`: la primera compilación local de hoy se anota en el registro |
+| Cambios de firmware después de `1623ada` | Ninguno hasta `3cfeff9` (`git diff --stat 1623ada..3cfeff9 -- firmware` vacío; los PR #40 a #44 son documentación). Compilar `main` actual da las mismas fuentes; anotar igual el commit usado |
 
 Las tres imágenes salen del mismo commit:
 
@@ -101,7 +102,9 @@ Si el puerto desaparece solo: modo programación (mantener BOOT, pulsar y soltar
 python -m esptool --chip esp32s3 -p COMx flash_id
 ```
 
-Anotar revisión del chip, tamaño de flash y la línea de características (PSRAM). Sirve para la pregunta abierta de [#37](https://github.com/wmrDev/agentic-iot-pet/issues/37) sobre PSRAM octal (GPIO33–37). **Por verificar:** que esta versión de esptool informe el tipo de PSRAM; si no lo informa, anotarlo como no determinado.
+Anotar revisión del chip, tamaño de flash y la línea de características (PSRAM). Sirve para la pregunta abierta de [#37](https://github.com/wmrDev/agentic-iot-pet/issues/37) sobre PSRAM octal (GPIO33–37).
+
+El [registro del 25-11](../pruebas/resultados/2026-11-25-T00-prueba-usb.md) ya informa, por esptool, «PSRAM integrada de 2 MB (AP_3v3)». Una PSRAM integrada de 3,3 V y 2 MB corresponde a la variante cuádruple, que no usa GPIO33–37; la octal suele ser de 1,8 V. **Confirmarlo hoy** con la línea de esta lectura antes de liberar esos pines. Si esptool no informa el tipo, anotarlo como no determinado.
 
 - Chip / revisión: `__________` · Flash: `__________` · PSRAM: `__________`
 
@@ -370,7 +373,7 @@ El firmware de `1623ada` no incluye Wi-Fi: la comprobación «sin red» confirma
 
 | Caso | Acción | Esperado en el monitor | Observado |
 |---|---|---|---|
-| Inicio | Toque breve | `study … phase=1` y un sonido corto | |
+| Inicio | Toque breve | `study … phase=1`, y un sonido corto si el MAX98357A está configurado en `Pet hardware` (sin amplificador, `Amplifier not configured: sounds disabled` al arrancar) | |
 | Pausa | Doble toque | `phase=2` | |
 | Reanudación | Doble toque otra vez | `phase=1` | |
 | Mantener | > 0,8 s y soltar | `voice requested`, LED encendido; `voice released`, LED apagado; la sesión no cambia | |

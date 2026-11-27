@@ -207,7 +207,7 @@ Las operaciones de umbral, aviso y confirmación las define T04 (#8). Los nombre
 - **Entorno:** banco (placa sola, alimentada y con log por el puerto USB del PC).
 - **Pasos:**
   1. Fotografiar el montaje completo y cada módulo con su serigrafía visible.
-  2. Registrar la identificación del diagnóstico USB (chip, revisión, flash, PSRAM) y el commit del firmware cargado.
+  2. Registrar la identificación del diagnóstico USB (chip, revisión y flash) y el commit del firmware cargado. El diagnóstico no informa la PSRAM, porque se compila con SPIRAM desactivada: tomarla de `python -m esptool --chip esp32s3 -p COMx flash_id` (paso 1.2 de la [hoja de banco](../../entrega/2026-11-28-hoja-banco.md)).
   3. Registrar el pinout verificado por H01. Si un pin no está verificado, escribirlo como pendiente; no completarlo con el previsto.
   4. Reiniciar la placa tres veces; anotar `reset_reason`, tiempo hasta la primera expresión y si el OLED se ve centrado.
 - **Esperado:** arranque estable en los tres reinicios; identificación coincide con la de H01.
